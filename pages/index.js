@@ -78,11 +78,13 @@ export default function Home(props) {
 
   function logoutPage(e) {
     e.preventDefault();
+    setLoading(true);
     Cookie.remove('token');
     setSuccess(true);
     setMessage('Logout Successful');
     setTimeout(() => {
       setMessage('');
+      setLoading(false);
       router.push('/auth/login');
     }, 3000);
   }
@@ -99,75 +101,72 @@ export default function Home(props) {
           }
         </div>
       </div>
-      <div>
-        
-          <div className="text-end">
-            {!token &&
-              <>
-                <button type="submit" className="btn btn-outline-primary mb-3" onClick={() => router.push('/auth/register')}>Register</button>
-                <button type="button" className="btn btn-primary mb-3 ms-3" onClick={() => router.push('/auth/login')}>Login</button>
-              </>
-            }
-            {token &&
-              <button type="submit" className="btn btn-outline-primary mb-3" onClick={logoutPage} disabled={loading}>Logout</button>
-            }
-          </div>
-        <form className="row g-3 mt-2" onSubmit={handleSearch}>
-          <div className="col-auto">
-            <input type="text" className="form-control" placeholder="Input SKU" onChange={(event) => setItemInput(event.target.value)} value={itemInput} disabled={!token} />
-          </div>
-          <div className="col-auto">
-            <button type="submit" className="btn btn-primary mb-3" disabled={!token || loading}>Search</button>
-            <button type="button" className="btn btn-primary mb-3 ms-3" onClick={() => router.push('/product/add')} disabled={!token || loading}>Add Prouct</button>
-          </div>
-        </form>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th style={{ width: "30%" }}>SKU</th>
-              <th style={{ width: "30%" }}>Product Name</th>
-              <th style={{ width: "40%" }}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products[0]?.id &&
-              products.map((product) => (
-                <tr key={product.id}>
-                  <td>{product.sku}</td>
-                  <td>{product.product_name}</td>
-                  <td>
-                    <Link
-                      href={`/product/edit/${product.sku}`}
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      className="btn btn-sm btn-danger btn-delete-user ms-2"
-                      onClick={() => removeProduct(product.sku)}
-                      disabled={loading}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            {(products[0]?.sku || products[0]?.message) && !products[0]?.id && (
-              <tr>
-                <td colSpan="3" className="text-center">
-                  {products[0]?.sku ?? products[0]?.message}
-                </td>
-              </tr>
-            )}
-            {products && !products.length && (
-              <tr>
-                <td colSpan="3" className="text-center">
-                  {token ? 'Please Input SKU to Display Product List' : 'Please Login to Access CRUD'}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="text-end">
+        {!token &&
+          <>
+            <button type="submit" className="btn btn-outline-primary mb-3" onClick={() => router.push('/auth/register')}>Register</button>
+            <button type="button" className="btn btn-primary mb-3 ms-3" onClick={() => router.push('/auth/login')}>Login</button>
+          </>
+        }
+        {token &&
+          <button type="submit" className="btn btn-outline-primary mb-3" onClick={logoutPage} disabled={loading}>Logout</button>
+        }
       </div>
+      <form className="row g-3 mt-2" onSubmit={handleSearch}>
+        <div className="col-auto">
+          <input type="text" className="form-control" placeholder="Input SKU" onChange={(event) => setItemInput(event.target.value)} value={itemInput} disabled={!token} />
+        </div>
+        <div className="col-auto">
+          <button type="submit" className="btn btn-primary mb-3" disabled={!token || loading}>Search</button>
+          <button type="button" className="btn btn-primary mb-3 ms-3" onClick={() => router.push('/product/add')} disabled={!token || loading}>Add Prouct</button>
+        </div>
+      </form>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>Product Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products[0]?.id &&
+            products.map((product) => (
+              <tr key={product.id}>
+                <td>{product.sku}</td>
+                <td>{product.product_name}</td>
+                <td>
+                  <Link
+                    href={`/product/edit/${product.sku}`}
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    className="btn btn-sm btn-danger btn-delete-user ms-2"
+                    onClick={() => removeProduct(product.sku)}
+                    disabled={loading}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          {(products[0]?.sku || products[0]?.message) && !products[0]?.id && (
+            <tr>
+              <td colSpan="3" className="text-center">
+                {products[0]?.sku ?? products[0]?.message}
+              </td>
+            </tr>
+          )}
+          {products && !products.length && (
+            <tr>
+              <td colSpan="3" className="text-center">
+                {token ? 'Please Input SKU to Display Product List' : 'Please Login to Access CRUD'}
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
