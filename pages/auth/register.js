@@ -34,7 +34,7 @@ export default function Register(props) {
         const values = [email, password];
         const allFieldsFill = values.every((field) => {
             const value = `${field}`.trim();
-            return value !== '' && value !== '0';
+            return value !== '';
         });
 
         if(allFieldsFill) {
