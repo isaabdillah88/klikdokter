@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Cookie from "js-cookie";
 import { useRouter } from "next/router";
 import cookies from 'next-cookies';
+import { post } from "../../services";
 
 export async function getServerSideProps(context) {
     const token = cookies(context);
@@ -40,17 +41,11 @@ export default function Login(props) {
 
         if(allFieldsFill) {
             setLoading(true);
-            const userLogin = await fetch('https://hoodwink.medkomtek.net/api/auth/login', {
-                method: 'POST',
-                body: JSON.stringify(fields),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            const response = await userLogin.json();
+            const response = await post('auth/login', fields);
             if(!response.token) {
+                let msgLogin = response.error ?? response.email[0];
                 setSuccess(false);
-                setMessage(response.error);
+                setMessage(msgLogin);
                 setLoading(false);
             } else {
                 setSuccess(true);

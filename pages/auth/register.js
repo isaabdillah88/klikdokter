@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import cookies from 'next-cookies';
+import { post } from "../../services";
 
 export async function getServerSideProps(context) {
     const token = cookies(context);
@@ -39,14 +40,7 @@ export default function Register(props) {
 
         if(allFieldsFill) {
             setLoading(true);
-            const registerEmail = await fetch('https://hoodwink.medkomtek.net/api/register', {
-                method: 'POST',
-                body: JSON.stringify(fields),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            const response = await registerEmail.json();
+            const response = await post('register', fields);
             if(!response.success) {
                 setSuccess(false);
                 setMessage(response.email[0]);

@@ -4,6 +4,7 @@ import Cookie from "js-cookie";
 import cookies from 'next-cookies';
 import { useRouter } from "next/router";
 import styles from "../styles/Home.module.css";
+import { post } from "../services";
 
 export async function getServerSideProps(context) {
   const token = cookies(context);
@@ -26,18 +27,7 @@ export default function Home(props) {
 
   async function handleSearch(e) {
     e.preventDefault();
-    const productList = await fetch(
-      "https://hoodwink.medkomtek.net/api/item/search",
-      {
-        method: "POST",
-        body: JSON.stringify({ sku: itemInput.toUpperCase() }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    const response = await productList.json();
+    const response = await post('item/search', { sku: itemInput.toUpperCase() }, token);
     setProducts([response]);
   }
 
@@ -46,18 +36,7 @@ export default function Home(props) {
 
     if(confirmation) {
       setLoading(true);
-      const deleteProduct = await fetch(
-        "https://hoodwink.medkomtek.net/api/item/delete",
-        {
-          method: "POST",
-          body: JSON.stringify({ sku: sku }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
-      const response = await deleteProduct.json();
+      const response =  await post('item/delete', { sku: sku }, token);
       if(!response.id) {
         let msgAdd = response.error ?? response.message;
         setSuccess(false);

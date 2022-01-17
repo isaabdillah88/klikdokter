@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { post } from "../services";
 
 export function AddEdit(props) {
     const router = useRouter();
@@ -43,15 +44,7 @@ export function AddEdit(props) {
 
     async function createProduct(data) {
         setLoading(true);
-        const addProduct = await fetch('https://hoodwink.medkomtek.net/api/item/add', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            }
-        })
-        const response = await addProduct.json();
+        const response = await post('item/add', data, token);
         if(!response.id) {
             let msgAdd = response.error ?? response.message;
             setSuccess(false);
@@ -69,15 +62,7 @@ export function AddEdit(props) {
 
     async function editProduct(data) {
         setLoading(true);
-        const updateProduct = await fetch('https://hoodwink.medkomtek.net/api/item/update', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            }
-        })
-        const response = await updateProduct.json();
+        const response = await post('item/update', data, token);
         if(!response.id) {
             let msgEdit = response.error ?? response.message;
             setSuccess(false);
