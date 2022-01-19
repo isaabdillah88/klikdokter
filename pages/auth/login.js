@@ -1,27 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Cookie from "js-cookie";
 import { useRouter } from "next/router";
-import cookies from 'next-cookies';
 import { post } from "../../services";
 
-export async function getServerSideProps(context) {
-    const token = cookies(context);
-    return { 
-        props: {
-            token
-        } 
-    }
-}
-
-export default function Login(props) {
+export default function Login() {
     const router = useRouter();
-
-    useEffect(() => {
-        if(Object.keys(props.token).length !== 0) {
-            router.push('/');
-        }
-    });
-    
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');

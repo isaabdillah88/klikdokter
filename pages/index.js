@@ -8,7 +8,6 @@ import { post } from "../services";
 
 export async function getServerSideProps(context) {
   const token = cookies(context);
-  
   return {
     props: {
       token,
@@ -132,14 +131,14 @@ export default function Home(props) {
             ))}
           {(products[0]?.sku || products[0]?.message) && !products[0]?.id && (
             <tr>
-              <td colSpan="3" className="text-center">
+              <td colSpan="3" className="text-center text-danger">
                 {products[0]?.sku ?? products[0]?.message}
               </td>
             </tr>
           )}
           {products && !products.length && (
             <tr>
-              <td colSpan="3" className="text-center">
+              <td colSpan="3" className="text-center text-danger">
                 {token ? 'Please Input SKU to Display Product List' : 'Please Login to Access CRUD'}
               </td>
             </tr>

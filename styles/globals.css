@@ -16,6 +16,7 @@ a {
 }
 
 input:focus,
+select:focus,
 button:focus {
   box-shadow: none !important;
 }
